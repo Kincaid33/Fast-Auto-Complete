@@ -1,2 +1,5 @@
 # COMP200003-Assignment-1
-fml!
+For further information check out assignment1.pdf.
+
+Good Luck!
+
