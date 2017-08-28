@@ -14,7 +14,17 @@ struct tree
 
 typedef tree Tree;
 
+/*function prototypes*/
+node * insert(node* pNode, char* word, int weight);
+
 int main (int argc, char *argv[]){
+
+    Tree.flag = false;
+
+
+
+
+
     return 0;
 }
 
@@ -30,8 +40,11 @@ node * insert(node* pNode, char* word, int weight){
         pNode -> left = insert(pNode -> left, word, weight);
     }
 
-    else if (/*current char in word is equal to char in pData*/)
+    else if (/*current char in word is equal to char in pNode*/)
     {
-
+        if (/*next char in word is '\0'*/)
+        {
+            // set pNode end_of_key_flag to true and assign weight
+        }
     }
 }
