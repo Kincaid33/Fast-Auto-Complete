@@ -3,16 +3,18 @@
         {
             "name": "Mac",
             "includePath": [
-                "/usr/include",
-                "/usr/local/include",
+                "/usr/include/",
+                "/usr/local/include/",
+                "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers",
                 "${workspaceRoot}"
             ],
             "defines": [],
             "intelliSenseMode": "clang-x64",
             "browse": {
                 "path": [
-                    "/usr/include",
-                    "/usr/local/include",
+                    "/usr/include/",
+                    "/usr/local/include/",
+                    "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers",    
                     "${workspaceRoot}"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
