@@ -2,12 +2,16 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+int print(char * word);
+
+
 int main(int argc, char *argv[]){
 
-    char *word = "ABCDEFGH";
-    int i;
-    for(i=0; i<=8; i++) {
-        printf("%d  ", (int)(* word+i));
-    }
+    printf("%d", print("cat"));
     return 0;
+}
+
+int print(char * word){
+    int temp = (int)(* (word+1));
+    return temp;
 }

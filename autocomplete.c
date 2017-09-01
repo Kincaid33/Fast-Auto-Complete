@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <ctype.h>
 
 #define WORDLENGTH 250
 
@@ -18,6 +19,7 @@ typedef struct node node;
 
 /*function prototypes*/
 node * insert(node* pNode, char* word, int weight);
+void find_and_traverse(node* pNode, char* prefix);
 /******************************/
 int main (int argc, char *argv[]){
     node *root;
@@ -60,3 +62,7 @@ node * insert(node* pNode, char* word, int weight){
     return pNode;
 }
 
+
+void find_and_traverse(node* pNode, char* prefix){
+
+}
