@@ -23,12 +23,15 @@ void traverse(Node* pNode, char* buffer, int depth);
 
 int main (int argc, char *argv[]){
 
-    Node *root = (struct node *)malloc(sizeof(Node));
+    Node *root = (struct node *) malloc(sizeof(Node));
     root->end_of_key = false;
     root->left = NULL;
     root->equal = NULL;
     root->right = NULL;
     root = insert(root, "cat", 3);
+    root = insert(root, "ant", 5);
+    root = insert(root, "almond", 5);
+    root = insert(root, "dog", 2);
     find_and_traverse(root, "ca");
     return 0;
 }
@@ -37,70 +40,61 @@ int main (int argc, char *argv[]){
 Node * insert(Node* pNode, char* word, int weight){
     if (pNode == NULL){
         // create a new node & insert the character
-        pNode =  malloc(sizeof(Node));
-        pNode->character=* word; 
-        pNode->end_of_key = false; 
-        pNode->weight = 0;
-        pNode->left = NULL;
-        pNode->equal = NULL;
-        pNode->right = NULL;
-        printf("+++++++++\n");
+        pNode = malloc(sizeof(Node));
+        pNode->character=* word;
+        printf("%c\n", * word);
     }
     // current char in word is smaller than char in pNode
     if ((* word) < pNode->character) {
         // insert the character on the left branch
         pNode->left = insert (pNode->left, word, weight);
-        printf("<==========\n");
     }
     // current char in word is equal to char in pNode
     else if((* word) == pNode->character) {
         // check if the next character is \0 or not
         if (*(word+1) == '\0') {
             pNode->end_of_key = true;
-            pNode->weight = weight;    
+            pNode->weight = weight;
         } else {
             pNode->equal = insert(pNode->equal , word+1, weight);
-        } 
-        printf("==========\n"); 
+        }
     }
     // current char in word is greater than char in pNode
     else {
         // insert the character on the right branch
         pNode->right = insert (pNode->right , word , weight);
-        printf("==========>\n"); 
     }
     return pNode;
 }
 
+
 void find_and_traverse(Node* pNode, char* prefix){
     char * buffer = malloc((WORDLENGTH+1)*(sizeof(char)));
+
     while(*prefix != '\0' && pNode != NULL) {
         // go to left branch
         if((* prefix) < pNode->character) {
-            pNode = pNode->left;
+            find_and_traverse(pNode->left, prefix);
             continue;
         }
         // go to right branch
         if((* prefix) > pNode->character) {
-            pNode = pNode->right;
+            find_and_traverse(pNode->right, prefix);
             continue;
         }
         // go to equal branch
         if((* prefix) == pNode->character) {
-            pNode = pNode->equal;
-            prefix++;
+            find_and_traverse(pNode->equal, prefix+1);
             continue;
         }
     }
+
     if(pNode != NULL) {
         if(pNode->end_of_key == true) {
             buffer[strlen(prefix)+1] = '\0';
             printf("%s\n", buffer);
         }
         traverse(pNode, buffer, strlen(prefix));
-    }
-    else {
-        printf("NOT FOUND\n");
     }
 }
 
