@@ -122,7 +122,7 @@ int main()
 	searchTST(root, "cats")? printf("Found\n"): printf("Not Found\n");
 	searchTST(root, "bu")? printf("Found\n"): printf("Not Found\n");
     searchTST(root, "cat")? printf("Found\n"): printf("Not Found\n");
-    searchTST(root, "debpriya")? printf("Found\n"): printf("Not Found\n");
+    searchTST(root, "ant")? printf("Found\n"): printf("Not Found\n");
 
 	return 0;
 }
