@@ -26,20 +26,21 @@ int main (int argc, char *argv[]){
     
     struct node* root = NULL;
 
-    root = insert(root, "cat", 5);
-    root = insert(root, "dog", 7);
-    root = insert(root, "camel", 5);
-    root = insert(root, "ant", 5);
-    root = insert(root, "caterpillar",7);
+    /******************TEST CASES**********************/
+    // root = insert(root, "cat", 5);
+    // root = insert(root, "dog", 7);
+    // root = insert(root, "camel", 5);
+    // root = insert(root, "ant", 5);
+    // root = insert(root, "caterpillar",7);
 
 
     // printf("The following words are inserted in the tree:\n");
     // traversal_tree(root);
     // printf("\n");
 
-    printf("The prefix returns the following words:\n");
-    find_and_traverse(root, "ca");
-    
+    // printf("The prefix returns the following words:\n");
+    // find_and_traverse(root, "cat");
+    free(root);
     return 0;
 }
 // create a new ternary search tree node
@@ -85,10 +86,9 @@ struct node* insert(struct node* pNode, char* word, int weight){
 void find_and_traverse(struct node * pNode, char* prefix){
     char buffer[WORDLENGTH];
     char prefix_old[WORDLENGTH+1];
-    strcpy(buffer, prefix);
     strcpy(prefix_old, prefix);
 
-    while(*prefix != '\0' && pNode != NULL) {
+    while(*(prefix) != '\0' && pNode != NULL) {
         // go to left branch
         if((* prefix) < pNode->character) {
             pNode = pNode->left;
@@ -101,22 +101,20 @@ void find_and_traverse(struct node * pNode, char* prefix){
             continue;
         }
         if((* prefix) == pNode->character) {
+            // buffer[strlen(prefix)+1] = '\0';
             prefix++;
             pNode = pNode->equal;
             continue;
-        }
-        
+        }   
     }
-
     if(pNode != NULL) {
 
         // include the prefix itself as a candidate if prefix is a key
-        if(pNode->end_of_key == true) {
-            buffer[strlen(prefix)+1] = '\0';
-            // printf("%s", prefix);
-            // printf("%s\n", buffer);
-        }
 
+        if(pNode->end_of_key == true) {
+            buffer[strlen(prefix)+1] = * prefix;
+            printf("%s\n", (buffer));
+        }
         // print all the keys that contain the prefix
         traverse(pNode, buffer, strlen(prefix), prefix_old);
     }
@@ -144,7 +142,8 @@ void traverse(struct node* pNode, char* buffer, int depth, char* prefix_old){
     buffer[depth] = pNode->character;
     if(pNode->end_of_key == true) {
         buffer[depth + 1] = '\0';
-        printf("%s%s\n", prefix_old, buffer);
+        printf("%s", buffer);
+        // printf("%s%s\n", prefix_old, buffer);
     }
     // go to the equal branch
     // advancing to the next character of the key
