@@ -4,6 +4,8 @@
 #include <string.h>
 
 #define WORDLENGTH 250
+#define RMODE "r"
+#define WMODE "w"
 
 struct node
 {
@@ -15,80 +17,28 @@ struct node
 
 /*function prototypes*/
 struct node* create_node(char key);
+FILE * input_and_output(struct node* pNode, char* datafile, char* outputfile , char* prefix);
 struct node* insert(struct node* pNode, char* word, int weight);
-void find_and_traverse(struct node* pNode, char* prefix, FILE* fp);
-void traverse(struct node * pNode, char* buffer, int depth, FILE* fp);
-void traversal_tree(struct node* pNode, FILE* fp);
-// FILE * create_output_file()
-
+int find_and_traverse(struct node* pNode, char* prefix, FILE* fp);
+void traverse(struct node * pNode, char* buffer, int depth, char* prefix_old, FILE* fp);
 /******************************/
 
 int main (int argc, char *argv[]){
-    
-    // create the root node
+
+    //  initilize the ternary search tree
     struct node* root = NULL;
-
-    // initialize 
-    char* word = NULL;
-    char buf[WORDLENGTH+1];
-    int weight = 0; 
-
-    // initialize an object of type FILE
-    FILE *fr, *fp;
-    // int count = 0;
-    // open the file to read
-    fr = fopen(argv[1], "r");
-    // create a new file to write the output
-    fp = fopen(argv[2], "w");
-
-    // if empty
-    if(fr == NULL || fp == NULL) {
-        printf("File opening failed\n");
-        return EXIT_FAILURE;
-    }
-
-    while(fgets(buf, WORDLENGTH, fr) != NULL) {
-       if((word = (char *) malloc((WORDLENGTH+1) * sizeof(char))) == NULL) {
-           printf("malloc() error");
-           exit(1);
-       }
-
-       sscanf(buf, "%d;%[^\n]s", &weight, word);
-       root = insert(root, word, weight);
-    //    count++;
-       if(!feof(fr)){
-           break;
-         }
-    }
-    free(root);
-    fclose(fr);
-
+    //  allocate the memory for the prefix to be stored
     char* prefix = malloc(strlen(argv[3]+1) * sizeof(char));
     strcpy(prefix, argv[3]);
-    fprintf(fp, "Prefix: %s", prefix);
-    printf("Prefix: %s found with ___ char comparisons\n", prefix);
-    find_and_traverse(root, prefix, fp);
-
-    
-    fclose(fp);
-    /******************TEST CASES**********************/
-    // root = insert(root, "cat", 5);
-    // root = insert(root, "dog", 7);
-    // root = insert(root, "camel", 5);
-    // root = insert(root, "ant", 5);
-    // root = insert(root, "caterpillar",7);
-
-
-    printf("The following words are inserted in the tree:\n");
-    traversal_tree(root, fp);
-    printf("\n");
-
-    // printf("The prefix returns the following words:\n");
-    // find_and_traverse(root, "cat");
+    //  initialize the file to be read
+    FILE * fwrite;
+    // read and write to file
+    fwrite = input_and_output(root, argv[1], argv[2], prefix);
+    fclose(fwrite);
+    // free the dynamic memory allocated
+    free(root);
     return 0;
 }
-
-/***************ALL THE FUNCTIONS**************/
 // create a new ternary search tree node
 struct node* create_node(char key){
     struct node* newNode = (struct node *) malloc(sizeof(struct node));
@@ -100,8 +50,35 @@ struct node* create_node(char key){
     newNode->right = NULL;
     return newNode;
 }
-// insert each key into a node to form a tree
 
+// read from a given data file and insert into the nodes
+FILE * input_and_output(struct node* pNode, char* datafile, char* outputfile , char* prefix) {
+    FILE *fr, *fp;
+    char ch = 'a';
+    int comparisons;
+    
+    int inputWeight = 0;
+    char* word = (char *) malloc((WORDLENGTH+1) * sizeof(char));
+    
+    fr = fopen(datafile, RMODE);
+    fp = fopen(outputfile, WMODE);
+
+    if((fr == NULL) || (fp == NULL)) {
+        printf("Failed to open data file\n");
+        exit(EXIT_FAILURE);
+    }
+
+    while(fscanf(fr, "%d; %[^\n]s", &inputWeight, word) && (ch = fgetc(fr) != EOF )) {
+        pNode = insert(pNode, word, inputWeight);
+    }
+    fprintf(fp, "Prefix:  %s\n", prefix);
+    comparisons = find_and_traverse(pNode, prefix, fp);
+    printf("Prefix:  %s found with %d char comparisons\n", prefix, comparisons);
+
+    fclose(fr);
+    return fp;
+}
+// insert each key into a node to form a tree
 struct node* insert(struct node* pNode, char* word, int weight){
     if (pNode == NULL){
         // create a new node & insert the character
@@ -110,7 +87,7 @@ struct node* insert(struct node* pNode, char* word, int weight){
     // current char in word is smaller than char in pNode
     if ((* word) < pNode->character) {
         // insert the character on the left branch
-        pNode->left = insert (pNode->left, word, weight);
+        pNode->left = insert (pNode->left, word, weight);    
     }
     // current char in word is equal to char in pNode
     else if((* word) == pNode->character) {
@@ -125,17 +102,20 @@ struct node* insert(struct node* pNode, char* word, int weight){
     // current char in word is greater than char in pNode
     else {
         // insert the character on the right branch
-        pNode->right = insert (pNode->right , word , weight);
+        pNode->right = insert(pNode->right , word , weight);
     }
     return pNode;
 }
 
-void find_and_traverse(struct node * pNode, char* prefix, FILE * fp){
-    
-    char * buffer = (char *) malloc((WORDLENGTH+1) * sizeof(char));
-
+// look for a particular key word
+int find_and_traverse(struct node * pNode, char* prefix, FILE* fp){
+    char * buffer = malloc((WORDLENGTH+1)*sizeof(char));
+    int comparisons = 0;
+    char prefix_old[WORDLENGTH+1];
+    strcpy(prefix_old, prefix);
     while(*(prefix) != '\0' && pNode != NULL) {
         // go to left branch
+        comparisons++;
         if((* prefix) < pNode->character) {
             pNode = pNode->left;
             continue;
@@ -155,45 +135,40 @@ void find_and_traverse(struct node * pNode, char* prefix, FILE * fp){
     if(pNode != NULL) {
 
         // include the prefix itself as a candidate if prefix is a key
-
         if(pNode->end_of_key == true) {
             buffer[strlen(prefix)+1] = * prefix;
-            fprintf(fp, "%s\n", (buffer));
+            fprintf(fp, "%s", (buffer));
         }
         // print all the keys that contain the prefix
-        traverse(pNode, buffer, strlen(prefix), fp);
+        traverse(pNode, buffer, strlen(prefix), prefix_old, fp);
     }
     else {
-        printf("NOTFOUND\n");
+        fprintf(fp, "NOTFOUND\n");
     }
-}
-
-// just traverse the tree for all the inserted nodes
-void traversal_tree(struct node* pNode, FILE* fp){
-    char buffer[WORDLENGTH];
-    traverse(pNode, buffer, 0, fp);
+    return comparisons;
 }
 
 // tree traversal from a given node
-void traverse(struct node* pNode, char* buffer, int depth, FILE * fp){
+void traverse(struct node* pNode, char* buffer, int depth, char* prefix_old, FILE* fp) {
     if(pNode == NULL) {
         return;
     }
     
     // go to the left most branch first
-    traverse(pNode->left, buffer, depth, fp);
+    traverse(pNode->left, buffer, depth, prefix_old, fp);
 
     // if no more left branches, then save the character
     buffer[depth] = pNode->character;
     if(pNode->end_of_key == true) {
         buffer[depth + 1] = '\0';
-        fprintf(fp, "%s\n", buffer);
+        // printf("%s", buffer);
+        fprintf(fp, "%s%s --> weight:  %d\n", prefix_old, buffer, pNode->weight);
     }
     // go to the equal branch
     // advancing to the next character of the key
-    traverse(pNode->equal, buffer, depth+1, fp);
+    traverse(pNode->equal, buffer, depth+1, prefix_old, fp);
 
     // Finally go to the branches that contain 
     // characters greater than the current one in the buffer
-    traverse(pNode->right, buffer, depth, fp);
+    traverse(pNode->right, buffer, depth, prefix_old, fp);
 }
