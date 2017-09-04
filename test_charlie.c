@@ -130,7 +130,7 @@ int find_and_traverse(struct node * pNode, char* prefix, FILE* fp){
             prefix++;
             pNode = pNode->equal;
             continue;
-        }   
+        } 
     }
     if(pNode != NULL) {
 
