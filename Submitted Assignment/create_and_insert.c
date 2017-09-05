@@ -3,7 +3,7 @@
 /* include the header file */
 #include "autocomplete1.h"
 
-/* insert the functions */
+/* insert all the functions */
 
 // create a new ternary search tree node
 struct node* create_node(char key){

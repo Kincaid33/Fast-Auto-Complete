@@ -3,7 +3,6 @@
 /* include the header file */
 #include "autocomplete1.h"
 
-/* insert the functions */
 
 // read from a given data file and insert into the nodes
 FILE * input_and_output(struct node* pNode, char* datafile, char* outputfile , char* prefix) {

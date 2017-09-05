@@ -11,7 +11,12 @@ int main (int argc, char *argv[]){
         struct node* root = NULL;
         //  allocate the memory for the prefix to be stored
         char* prefix = malloc(strlen(argv[3]+1) * sizeof(char));
-        strcpy(prefix, argv[3]);
+    
+        if(strcmp(argv[3], "<") == 0){
+            strcpy(prefix, argv[4]);
+        } else {
+            strcpy(prefix, argv[3]);
+        }
         // declare the write file pointer variable
         FILE * fwrite;
         // read and write to file

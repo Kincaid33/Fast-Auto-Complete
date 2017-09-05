@@ -3,7 +3,6 @@
 /* include the header file */
 #include "autocomplete1.h"
 
-/* insert the functions */
 
 // look for a particular key word
 int find_and_traverse(struct node * pNode, char* prefix, FILE* fp){
@@ -46,7 +45,6 @@ int find_and_traverse(struct node * pNode, char* prefix, FILE* fp){
     }
     return comparisons;
 }
-
 
 // tree traversal from a given node
 void traverse(struct node* pNode, char* buffer, int depth, char* prefix_old, FILE* fp) {
