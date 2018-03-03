@@ -1,7 +1,15 @@
-# COMP200003-Assignment-1
-For further information check out assignment1.pdf.
+# Fast Auto Complete as a Ternary Search Tree
 
-Late Submission on 5th September 2017, 11:40am.
+Autocomplete highly enhances user experience for two reasons: it minimises the number of keystrokes
+needed to specify a string input, while at the same time helps users with a suggestion of useful closely
+related inputs. Autocomplete typically wants to suggest the most likely strings that share the prefix
+specified so far. Typically the prefix is extended every time a new keyboard event is triggered, hinting
+that any successful autocomplete function should be as fast as the average human typist. Surveys
+suggest that the average person types 200 characters per minute, which means that ideally our autocomplete
+algorithm should not take longer than 0.3 seconds to suggest the correct autocompletion
+candidates. If autocomplete takes much longer, users will dislike our solution. Another important
+aspect is that more than one candidate should be suggested according to their likelihood. If we fail
+suggesting the correct autocompletions users will not like our implementation either.
 
 # Bugs Present
 	1. Piping in a key_file return segmentation error
